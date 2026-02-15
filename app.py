@@ -14,7 +14,7 @@ st.markdown("---")
 with st.sidebar:
     st.header("Settings")
     user_api_key = st.text_input("Gemini API Key daalein:", type="password")
-    st.info("Aapki key surakshit hai aur sirf is session ke liye use hogi.")
+    st.info("Aapki key surakshit hai.")
 
 # --- MAIN APP LOGIC ---
 uploaded_file = st.file_uploader("Chapter PDF Upload Karein", type="pdf")
@@ -32,29 +32,28 @@ if uploaded_file and user_api_key:
         try:
             client = genai.Client(api_key=user_api_key)
             
-            # --- PROGRESS BAR ---
-            progress_bar = st.progress(0)
-            status_text = st.empty()
-            
-            # Master Prompt Logic
+            # Master Prompt with your Specific Depth Requirements
+            # Focus on Heating Effect, Power, and Board Logic
             master_prompt = f"""
             You are a Senior Physics Board Examiner. Create "Deep Text-Only Notes" for this text.
             
             STRICT RULES:
             - NO IMAGES & NO LaTeX: Use plain text only (e.g., V = I x R, H = I squared R t).
-            - NO STARS: Use '-' for bullet points.
+            - NO STARS: Use '-' for bullets.
             - 2026 PATTERN: Add 1 Case-Based, 2 Assertion-Reason, and 3 Competency questions after each topic.
             - SYLLABUS: Cover all Class 10 Board topics (Current, Potential, Ohm's Law, Resistance, Heating Effect, Power).
-            - DEPTH: Explain the conceptual 'Why' for everything.
+            - DEPTH: Explain the conceptual 'Why' for everything topic-by-topic.
 
             Text: {full_text[:15000]} 
             """
             
-            status_text.text("AI Thinking... Board Pattern analyze ho raha hai.")
-           response = client.models.generate_content(  model="gemini-1.5-flash",  contents=master_prompt)
-            progress_bar.progress(100)
+            # Correct API Call with Keyword Arguments
+            response = client.models.generate_content(
+                model="gemini-1.5-flash", 
+                contents=master_prompt
+            )
             
-            # --- DISPLAY RESULTS ---
+            # Display Results
             st.markdown("### 📝 Generated Deep Notes")
             st.write(response.text)
 
@@ -63,7 +62,6 @@ if uploaded_file and user_api_key:
             word_doc.add_heading('Physics Deep Notes & 2026 Question Bank', 0)
             word_doc.add_paragraph(response.text)
             
-            # Save to memory
             bio = io.BytesIO()
             word_doc.save(bio)
             
@@ -76,9 +74,5 @@ if uploaded_file and user_api_key:
 
         except Exception as e:
             st.error(f"Error: {e}")
-
 else:
-
     st.info("Aage badhne ke liye apni API Key daalein aur PDF upload karein.")
-
-

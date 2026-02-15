@@ -51,7 +51,7 @@ if uploaded_file and user_api_key:
             """
             
             status_text.text("AI Thinking... Board Pattern analyze ho raha hai.")
-            response = client.models.generate_content(model="gemini-2.0-flash", contents=master_prompt)
+            response = client.models.generate_content(model="gemini-1.5-flash", contents=master_prompt)
             progress_bar.progress(100)
             
             # --- DISPLAY RESULTS ---
@@ -78,4 +78,5 @@ if uploaded_file and user_api_key:
             st.error(f"Error: {e}")
 
 else:
+
     st.info("Aage badhne ke liye apni API Key daalein aur PDF upload karein.")

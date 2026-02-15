@@ -3,7 +3,6 @@ from google import genai
 import fitz  # PyMuPDF
 from docx import Document
 import io
-import time
 
 # --- UI CONFIGURATION ---
 st.set_page_config(page_title="Physics Board Bot 2026", page_icon="🍎")
@@ -33,7 +32,6 @@ if uploaded_file and user_api_key:
             client = genai.Client(api_key=user_api_key)
             
             # Master Prompt with your Specific Depth Requirements
-            # Focus on Heating Effect, Power, and Board Logic
             master_prompt = f"""
             You are a Senior Physics Board Examiner. Create "Deep Text-Only Notes" for this text.
             
@@ -41,13 +39,13 @@ if uploaded_file and user_api_key:
             - NO IMAGES & NO LaTeX: Use plain text only (e.g., V = I x R, H = I squared R t).
             - NO STARS: Use '-' for bullets.
             - 2026 PATTERN: Add 1 Case-Based, 2 Assertion-Reason, and 3 Competency questions after each topic.
-            - SYLLABUS: Cover all Class 10 Board topics (Current, Potential, Ohm's Law, Resistance, Heating Effect, Power).
-            - DEPTH: Explain the conceptual 'Why' for everything topic-by-topic.
+            - SYLLABUS: Cover all Class 10 Board topics like Ohm's Law, Resistance, Heating Effect, and Power.
+            - DEPTH: Explain the conceptual 'Why' for everything topic-by-topic. Do not move to the next topic until depth is met.
 
             Text: {full_text[:15000]} 
             """
             
-            # Correct API Call with Keyword Arguments
+            # Correct API Call for gemini-1.5-flash
             response = client.models.generate_content(
                 model="gemini-1.5-flash", 
                 contents=master_prompt

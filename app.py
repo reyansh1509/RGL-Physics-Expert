@@ -46,11 +46,7 @@ if uploaded_file and user_api_key:
             """
             
             # Correct API Call for gemini-1.5-flash
-            response = client.models.generate_content(
-                model="gemini-1.5-flash", 
-                contents=master_prompt
-            )
-            
+            response = client.models.generate_content(model="gemini-1.5-flash",contents=master_prompt)
             # Display Results
             st.markdown("### 📝 Generated Deep Notes")
             st.write(response.text)
@@ -74,3 +70,4 @@ if uploaded_file and user_api_key:
             st.error(f"Error: {e}")
 else:
     st.info("Aage badhne ke liye apni API Key daalein aur PDF upload karein.")
+

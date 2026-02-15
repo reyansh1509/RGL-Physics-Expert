@@ -32,22 +32,27 @@ if uploaded_file and user_api_key:
             client = genai.Client(api_key=user_api_key)
             
             # Master Prompt with your Specific Depth Requirements
+            # Focus on 2026 Pattern: Case-Based, Assertion-Reason, Competency
             master_prompt = f"""
             You are a Senior Physics Board Examiner. Create "Deep Text-Only Notes" for this text.
             
             STRICT RULES:
             - NO IMAGES & NO LaTeX: Use plain text only (e.g., V = I x R, H = I squared R t).
             - NO STARS: Use '-' for bullets.
-            - 2026 PATTERN: Add 1 Case-Based, 2 Assertion-Reason, and 3 Competency questions after each topic.
+            - 2026 PATTERN: After each topic, add 1 Case-Based Question, 2 Assertion-Reason Questions, and 3 Competency Questions.
             - SYLLABUS: Cover all Class 10 Board topics like Ohm's Law, Resistance, Heating Effect, and Power.
             - DEPTH: Explain the conceptual 'Why' for everything topic-by-topic. Do not move to the next topic until depth is met.
 
             Text: {full_text[:15000]} 
             """
             
-            # Correct API Call for gemini-1.5-flash
-            response = client.models.generate_content(model="gemini-1.5-flash",contents=master_prompt)
-            # Display Results
+            # Stable Model ID for high daily quota
+            response = client.models.generate_content(
+                model="gemini-1.5-flash", 
+                contents=master_prompt
+            )
+            
+            # Result Display
             st.markdown("### 📝 Generated Deep Notes")
             st.write(response.text)
 
@@ -70,4 +75,3 @@ if uploaded_file and user_api_key:
             st.error(f"Error: {e}")
 else:
     st.info("Aage badhne ke liye apni API Key daalein aur PDF upload karein.")
-
